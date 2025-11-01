@@ -22,7 +22,10 @@ If you are unsure about the category, feel free to create a new one that makes s
 ### 2. Required Files
 
 Each workflow submission (your new folder) **must** contain:
-1.  `workflow.dsl`: The raw exported DSL file (JSON or YAML) from your Dify application.
+1.  **`workflow.yml`**:
+    * This is the raw exported file from your Dify application.
+    * **[IMPORTANT] You MUST rename your exported file (e.g., `My Workflow.yml` or `我的工作流.yml`) to exactly `workflow.yml`.**
+    * This allows users to import it directly into Dify and enables our automation system.
 2.  `README.md`: A markdown file that explains your workflow (using our template).
 
 **We highly recommend adding:**
