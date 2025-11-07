@@ -22,7 +22,7 @@
 * **结束节点:** 返回输出的 `summary` (字符串)。
 
 ## 📸 工作流截图 (推荐)
-![Workflow Graph](screenshot-workflow.png)
+![工作流图](screenshot-workflow.png)
 
 ## 📸 运行截图 (推荐)
-![Example Run](screenshot-run.png)
+![运行示例](screenshot-run.png)
