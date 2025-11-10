@@ -114,12 +114,43 @@ async function readWorkflowDirectory(githubPath) {
     return null
   })()
 
+  const graphNodes =
+    (dslContent &&
+      dslContent.workflow &&
+      dslContent.workflow.graph &&
+      Array.isArray(dslContent.workflow.graph.nodes)
+        ? dslContent.workflow.graph.nodes
+        : []) || []
+
+  const llmModels = Array.from(
+    new Set(
+      graphNodes
+        .filter((node) => node?.data?.type === 'llm' && node.data.model && node.data.model.name)
+        .map((node) => node.data.model.name.trim())
+        .filter(Boolean),
+    ),
+  )
+
+  const toolNodeTypes = new Set(['http-request', 'code', 'rag-retrieval', 'database-query', 'dataset-query'])
+  const toolsUsed = Array.from(
+    new Set(
+      graphNodes
+        .filter((node) => node?.data?.type && toolNodeTypes.has(node.data.type))
+        .map((node) => node.data.type)
+        .filter(Boolean),
+    ),
+  )
+
   const data = {
     name: nameMatch ? nameMatch[1].trim() : githubPath.split('/').pop(),
     github_path: githubPath,
     author_github: authorMatch ? authorMatch[1].trim() : null,
     tags,
     language,
+    dify_version: dslContent?.version ?? null,
+    llm_models: llmModels.length > 0 ? llmModels : null,
+    tools_used: toolsUsed.length > 0 ? toolsUsed : null,
+    published_at: new Date().toISOString(),
     description,
     readme_content: readmeContent,
     yml_content: ymlContent,
