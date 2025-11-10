@@ -79,6 +79,7 @@ async function readWorkflowDirectory(githubPath) {
   const nameMatch = readmeContent.match(/^#\s+(.+)$/m)
   const authorMatch = readmeContent.match(/\*\*Author:\*\*\s*`?([A-Za-z0-9-_]+)`?/i)
   const tagsLineMatch = readmeContent.match(/^\*\*Tags:\*\*\s*(.+)$/im)
+  const difyVersionMatch = readmeContent.match(/Dify\s+v(\d+\.\d+\.\d+(?:\+[^\s]*)?)/i)
   let tags = []
   if (tagsLineMatch) {
     const tagsLine = tagsLineMatch[1]
@@ -98,6 +99,7 @@ async function readWorkflowDirectory(githubPath) {
   }
 
   const language = tags.find((tag) => tag.toLowerCase().startsWith('language:')) || null
+  const difyVersion = difyVersionMatch ? `v${difyVersionMatch[1]}` : null
 
   const description = (() => {
     const lines = readmeContent.split(/\r?\n/)
@@ -141,16 +143,28 @@ async function readWorkflowDirectory(githubPath) {
     ),
   )
 
+  const startNode = graphNodes.find((node) => node?.data?.type === 'start')
+  let publishedAt = new Date().toISOString()
+  if (startNode) {
+    const timestamp = parseInt(String(startNode.id), 10)
+    if (!Number.isNaN(timestamp)) {
+      const derivedDate = new Date(timestamp)
+      if (!Number.isNaN(derivedDate.getTime())) {
+        publishedAt = derivedDate.toISOString()
+      }
+    }
+  }
+
   const data = {
     name: nameMatch ? nameMatch[1].trim() : githubPath.split('/').pop(),
     github_path: githubPath,
     author_github: authorMatch ? authorMatch[1].trim() : null,
     tags,
     language,
-    dify_version: dslContent?.version ?? null,
+    dify_version: difyVersion,
     llm_models: llmModels.length > 0 ? llmModels : null,
     tools_used: toolsUsed.length > 0 ? toolsUsed : null,
-    published_at: new Date().toISOString(),
+    published_at: publishedAt,
     description,
     readme_content: readmeContent,
     yml_content: ymlContent,
