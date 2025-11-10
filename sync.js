@@ -99,7 +99,7 @@ async function readWorkflowDirectory(githubPath) {
   }
 
   const language = tags.find((tag) => tag.toLowerCase().startsWith('language:')) || null
-  const difyVersion = difyVersionMatch ? `v${difyVersionMatch[1]}` : null
+  const difyVersion = difyVersionMatch ? difyVersionMatch[1] : null
 
   const description = (() => {
     const lines = readmeContent.split(/\r?\n/)
