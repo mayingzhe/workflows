@@ -20,6 +20,40 @@ DifyHub 是一个面向 Dify 工作流的开源社区和平台。本仓库存储
 
 *(发起人寄语：大家好，我是独孤风。作为一名 AI 全栈工程师，我深知构建高质量工作流的价值和挑战。我发起了 DifyHub 这个项目，希望能和社区一起，打造一个最好用的工作流“军火库”。)*
 
+## 📚 工作流总览
+
+点击下方的工作流标题即可进入对应目录，查看 README、使用截图以及部署指引。
+
+### 数据分析
+
+| 工作流 | 说明 |
+| --- | --- |
+| [Smart Chart Generator (EN)](data-analysis/smart-chart-generator-en/README.md) | Excel/CSV 数据上传后，借助 DeepSeek Coder 自动生成可交互的 ECharts HTML 图表。 |
+| [智能图表生成助手 (CN)](data-analysis/smart-chart-generator-cn/README.md) | 中文提示词与界面，上传表格即可一键产出可交互的 ECharts 页面。 |
+| [Text-to-SQL Data Analyst (EN)](data-analysis/text-to-sql-en/README.md) | 将英文自然语言问题转成 SQL，调用自建 HTTP API 执行并输出图表化洞察。 |
+| [Text-to-SQL 数据分析师 (CN)](data-analysis/text-to-sql-cn/README.md) | 中文 Text-to-SQL 模板，适合需要自建数据库/API 的进阶场景。 |
+
+### 文本处理
+
+| 工作流 | 说明 |
+| --- | --- |
+| [Basic Text Summarizer (EN)](text-processing/basic-text-summarizer-en/README.md) | 英文长文本自动摘要，适合新手快速上手 Dify 工作流。 |
+| [基础文本摘要器 (CN)](text-processing/basic-text-summarizer-cn/README.md) | 中文摘要版本，支持一段话输入、直接输出精炼摘要。 |
+
+### 图像生成
+
+| 工作流 | 说明 |
+| --- | --- |
+| [FLUX Painting Robot (EN)](image-generation/flux-painter-en/README.md) | 英文绘画请求 → Qwen 提示词优化 → SiliconFlow FLUX.1-schnell 出图。 |
+| [FLUX 绘画机器人 (CN)](image-generation/flux-painter-cn/README.md) | 中文需求自动翻译并优化为英文 Flux.1 提示词，再通过 Python 工具链完成出图。 |
+
+### 视觉理解
+
+| 工作流 | 说明 |
+| --- | --- |
+| [Image Recognition (EN)](vision/image-recognition-en/README.md) | 上传图片，调用 Qwen2.5-VL-32B-Instruct 输出英文描述。 |
+| [图片识别 (CN)](vision/image-recognition-cn/README.md) | 中文交互的图片问答模板，可输出简洁准确的中文描述。 |
+
 ## 🚀 如何使用
 
 1.  **浏览** `/workflows` 目录，找到你需要的工作流。
