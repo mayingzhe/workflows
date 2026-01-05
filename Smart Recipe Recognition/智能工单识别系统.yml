@@ -1,0 +1,446 @@
+app:
+  description: 智能工单识别系统
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 智能工单识别系统
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: qiangxinglin/excel_tools:0.0.5@81147a24fa4dc871759a759bda9cf024efdba3c525815e40daba74bd7ee89c4b
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/gemini:0.7.2@6e53b92877de2507ce83f2fc32ddf54a9662e4b5ef9e7e5d17bd18153a6485da
+    version: null
+kind: app
+version: 0.5.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      - document
+      allowed_file_upload_methods:
+      - remote_url
+      - local_file
+      enabled: true
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        single_chunk_attachment_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: llm-source-1767164062417-target
+      source: llm
+      sourceHandle: source
+      target: '1767164062417'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: tool
+      id: 1767164062417-source-1767164097886-target
+      source: '1767164062417'
+      sourceHandle: source
+      target: '1767164097886'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: answer
+      id: 1767164097886-source-answer-target
+      source: '1767164097886'
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: answer
+      id: 1767163493896-source-1767166318423-target
+      source: '1767163493896'
+      sourceHandle: source
+      target: '1767166318423'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: answer
+        targetType: llm
+      id: 1767166318423-source-llm-target
+      source: '1767166318423'
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: 用户输入
+        type: start
+        variables: []
+      height: 73
+      id: '1767163493896'
+      position:
+        x: 96
+        y: 254
+      positionAbsolute:
+        x: 96
+        y: 254
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        memory:
+          query_prompt_template: '{{#sys.query#}}
+
+
+            {{#sys.files#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-3-pro-preview
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: 59da8f42-3716-40ba-b146-4bf12d2c96f0
+          role: system
+          text: "你是一个专业的工业文档数字化专家。请识别提供的“MES-物料流转卡”图片，并严格按照以下 JSON 格式输出信息。\n识别要求：\n\
+            基本信息：包括公司名、产品名称、编码、型号、日期等。\n手写体识别：页面顶部的手写体不需要识别，“操作工/质检员”手写签字、附加项目中的手写信息务必要识别准确。\n\
+            状态判断：如果操作工处有签字，则 is_signed 为 true。\n提供的文件中包含多个“MES-物料流转卡”页面。请逐页识别所有工单，并将结果合并为一个 JSON\
+            \ 数组（List） 输出\n输出格式：只输出 JSON 字符串，不要包含 Markdown 代码块。\nJSON 结构示例：\n[{\n\
+            \  \"header\": {\n    \"qr_code_text\": \"XZ25100375-02-004-1\",\n   \
+            \ \"company\": \"兴源环保设备有限公司\",\n    \"print_date\": \"2025/11/21 14:20\"\
+            ,\n    \"doc_type\": \"MES-物料流转卡\"\n  },\n  \"product_info\": {\n    \"\
+            name\": \"滑块挡块|XZ25010007.YJ1021.12.80-02/SUS316L\",\n    \"code\": \"\
+            4001011172\",\n    \"model\": \"XZ25010007.YJ1021.12.80-02/SUS316L\",\n\
+            \    \"start_date\": \"2025-11-21\",\n    \"end_date\": \"2025-12-03\"\
+            ,\n    \"quantity\": 2,\n    \"auxiliary_item\": \"XZ25100375-02\",\n\
+            \    \"storage_location\": \"下料仓\",   // 如果原文为空，请保持空字符串\n    \"remark\"\
+            : \"XZ25100375-02-004\",\n    \"print_count\": 1 \n  },\n  \"process_details\"\
+            : [\n    {\n      \"process_name\": \"1.激光切割\",\n      \"work_center\"\
+            : \"自制1车间-下料组\",\n      \"quantity\": 2,\n      \"operator_signature\"\
+            : \"亢建飞\",\n      \"unit_time\": \"2.4(分钟)\",\n      \"additional_man_hours\"\
+            : \"4(分钟)\",       // 注意提取表格中“附加工时”或“附加工”栏的数字，如果原文为空，请保持空字符串\n      \"\
+            additional_item\": \"\",        // 注意提取表格中“附加项”栏的内容，如果内容为人名和日期它属于auditor内容，不用提取，如果原文为空，请保持空字符串\n\
+            \      \"row_remark\": \"\",              // 注意提取表格中“备注”栏的内容，如果原文为空，请保持空字符串\n\
+            \      \"auditor\": { \n             \"name\": \"郭林\", // 位于表格右侧或下方的审核/复核签字\n\
+            \             \"date\": \"12.3\"  // 签字旁边的日期\n      }\n    }\n  ]\n}\n\
+            ]"
+        selected: false
+        title: LLM
+        type: llm
+        vision:
+          enabled: false
+      height: 88
+      id: llm
+      position:
+        x: 680
+        y: 282
+      positionAbsolute:
+        x: 680
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        answer: '{{#1767164062417.origin_json#}}{{#1767164097886.files#}}'
+        selected: false
+        title: 直接回复
+        type: answer
+        variables: []
+      height: 122
+      id: answer
+      position:
+        x: 1612
+        y: 282
+      positionAbsolute:
+        x: 1612
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: "\nimport json\nimport re\n\ndef main(arg1: str) -> dict:\n    try:\n\
+          \        # 1. 基础 JSON 清洗 (\U0001F525 修复核心 \U0001F525)\n        # 修改正则：同时匹配以\
+          \ [ 开头的列表 或 以 { 开头的对象\n        # 这样就能处理多页工单生成的 [...] 格式了\n        match\
+          \ = re.search(r'(\\[.*\\]|\\{.*\\})', arg1, re.DOTALL)\n        clean_str\
+          \ = match.group() if match else arg1.strip()\n        \n        # 尝试解析\n\
+          \        try:\n            data = json.loads(clean_str)\n        except\
+          \ json.JSONDecodeError:\n            # 兜底：如果还报错，可能是多个对象没包在列表里，尝试强制包一层\n\
+          \            # 这种情况少见，但能救命\n            clean_str = f\"[{clean_str}]\".replace(\"\
+          } {\", \"}, {\")\n            data = json.loads(clean_str)\n        \n \
+          \       # === A. 中文标题映射 (保持您的定制需求) ===\n        key_map = {\n          \
+          \  # --- 头部信息 ---\n            \"qr_code_text\": \"二维码内容\",\n          \
+          \  \"company\": \"公司名称\",\n            \"print_date\": \"打印时间\",\n     \
+          \       \"doc_type\": \"单据类型\",\n            \"product_name\": \"产品名称\"\
+          ,\n            \"name\": \"产品名称\",\n            \"product_code\": \"产品编码\"\
+          ,\n            \"code\": \"产品编码\",\n            \"product_model\": \"产品型号\"\
+          ,\n            \"model\": \"产品型号\",\n            \"start_date\": \"开工日期\"\
+          ,\n            \"end_date\": \"完工日期\",\n            \"quantity\": \"生产数量\"\
+          , \n            \"auxiliary_item\": \"辅助项\",\n            \"storage_location\"\
+          : \"入库至\",    # 您的定制：入库至\n            \"remark\": \"备注\",\n            \"\
+          remarks\": \"备注\",\n            \"print_count\": \"打印次数\",\n           \
+          \ \n            # --- 工序信息 ---\n            \"process_name\": \"工序名称\",\n\
+          \            \"work_center\": \"工作中\",        # 您的定制：工作中\n            \"\
+          process_quantity\": \"数量\",     # 您的定制：紧跟在工作中后面\n            \"operator_signature\"\
+          : \"操作工/签名\",\n            \"operator\": \"操作工\",\n            \"unit_time\"\
+          : \"单件工时\",\n            \"additional_man_hours\": \"附加工时\",\n         \
+          \   \"additional_item\": \"附加项目\",\n            \"row_remark\": \"行备注\"\
+          ,\n            \"auditor_name\": \"审核人\",\n            \"auditor_date\"\
+          : \"审核日期\"\n        }\n        \n        # === B. 清洗函数 ===\n        def\
+          \ clean_for_excel(text):\n            if text is None:\n               \
+          \ return \"\"\n            text_str = str(text).strip()\n            # 清洗非法字符\n\
+          \            text_str = re.sub(r'[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F]',\
+          \ '', text_str)\n            if text_str and text_str[0] in ['=', '+', '-',\
+          \ '@']:\n                text_str = \"'\" + text_str\n            return\
+          \ text_str\n\n        # === C. 主逻辑 ===\n        origin_data = data\n   \
+          \     horizontal_list = [] \n        \n        # 兼容处理：无论 LLM 返回的是单个对象还是列表，都统一转为列表遍历\n\
+          \        job_orders = data if isinstance(data, list) else [data]\n     \
+          \   \n        for order in job_orders:\n            if isinstance(order,\
+          \ dict):\n                order_lower = {k.lower(): v for k, v in order.items()}\n\
+          \                \n                common_info = {}\n                if\
+          \ \"header\" in order_lower and isinstance(order_lower[\"header\"], dict):\n\
+          \                    common_info.update(order_lower[\"header\"])\n     \
+          \           if \"product_info\" in order_lower and isinstance(order_lower[\"\
+          product_info\"], dict):\n                    common_info.update(order_lower[\"\
+          product_info\"])\n                \n                process_list = order_lower.get(\"\
+          process_details\", [])\n                if not isinstance(process_list,\
+          \ list) or len(process_list) == 0:\n                    process_list = [{}]\
+          \ \n\n                for item in process_list:\n                    if\
+          \ isinstance(item, dict):\n                        # 1. 展平 auditor\n   \
+          \                     if \"auditor\" in item and isinstance(item[\"auditor\"\
+          ], dict):\n                            auditor_info = item.pop(\"auditor\"\
+          )\n                            for ak, av in auditor_info.items():\n   \
+          \                             item[f\"auditor_{ak}\"] = av\n           \
+          \             \n                        # 2. 提取工序数量\n                  \
+          \      if \"quantity\" in item:\n                            item[\"process_quantity\"\
+          ] = item.pop(\"quantity\")\n                        \n                 \
+          \       # 3. 合并\n                        merged_row = {**common_info, **item}\n\
+          \                        \n                        # 4. 按 key_map 顺序输出\n\
+          \                        translated_row = {}\n                        \n\
+          \                        for en_key, cn_key in key_map.items():\n      \
+          \                      val = merged_row.get(en_key, \"\")\n            \
+          \                translated_row[cn_key] = clean_for_excel(val)\n       \
+          \                 \n                        horizontal_list.append(translated_row)\n\
+          \        \n        # 兜底\n        if not horizontal_list:\n            horizontal_list\
+          \ = [{\"提示\": \"未提取到数据\"}]\n\n        return {\n            \"result_json\"\
+          : json.dumps(horizontal_list, ensure_ascii=False),\n            \"origin_json\"\
+          : json.dumps(origin_data, ensure_ascii=False, indent=4)\n        }\n\n \
+          \   except Exception as e:\n        err_msg = str(e)\n        return {\n\
+          \            \"result_json\": json.dumps([{\"错误信息\": err_msg}], ensure_ascii=False),\n\
+          \            \"origin_json\": json.dumps({\"error\": err_msg}, ensure_ascii=False,\
+          \ indent=4)\n        }\n"
+        code_language: python3
+        outputs:
+          origin_json:
+            children: null
+            type: string
+          result_json:
+            children: null
+            type: string
+        selected: false
+        title: 代码执行
+        type: code
+        variables:
+        - value_selector:
+          - llm
+          - text
+          value_type: string
+          variable: arg1
+      height: 52
+      id: '1767164062417'
+      position:
+        x: 1012
+        y: 282
+      positionAbsolute:
+        x: 1012
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        is_team_authorization: true
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: The JSON string to convert.
+            ja_JP: The JSON string to convert.
+            pt_BR: The JSON string to convert.
+            zh_Hans: 要转换的JSON字符串。
+          label:
+            en_US: JSON String
+            ja_JP: JSON String
+            pt_BR: JSON String
+            zh_Hans: JSON字符串
+          llm_description: The JSON string to convert.
+          max: null
+          min: null
+          name: json_str
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: The filename for the generated Excel file
+            ja_JP: The filename for the generated Excel file
+            pt_BR: The filename for the generated Excel file
+            zh_Hans: 生成的Excel文件的文件名
+          label:
+            en_US: Excel filename
+            ja_JP: Excel filename
+            pt_BR: Excel filename
+            zh_Hans: Excel文件名
+          llm_description: The filename that will be used for the generated Excel
+            file
+          max: null
+          min: null
+          name: filename
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        params:
+          filename: ''
+          json_str: ''
+        plugin_id: qiangxinglin/excel_tools
+        plugin_unique_identifier: qiangxinglin/excel_tools:0.0.5@81147a24fa4dc871759a759bda9cf024efdba3c525815e40daba74bd7ee89c4b
+        provider_icon: /console/api/workspaces/current/plugin/icon?tenant_id=a64d99eb-0a15-4e3e-89cd-1fd11a5519a2&filename=633fbc546fec8855ed43a00343339462654d57473a79fc63b2858c1462470672.svg
+        provider_id: qiangxinglin/excel_tools/excel_tools
+        provider_name: qiangxinglin/excel_tools/excel_tools
+        provider_type: builtin
+        selected: false
+        title: Json转Excel
+        tool_configurations: {}
+        tool_description: 将Json转换为Excel。
+        tool_label: Json转Excel
+        tool_name: json2excel
+        tool_node_version: '2'
+        tool_parameters:
+          filename:
+            type: mixed
+            value: null
+          json_str:
+            type: mixed
+            value: '{{#1767164062417.result_json#}}'
+        type: tool
+      height: 52
+      id: '1767164097886'
+      position:
+        x: 1312
+        y: 282
+      positionAbsolute:
+        x: 1312
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        answer: 收到您的工单文件！正在进行 OCR 识别和数据提取，生成 Excel 需要一点时间，请您耐心等待...
+        selected: false
+        title: 直接回复 2
+        type: answer
+        variables: []
+      height: 132
+      id: '1767166318423'
+      position:
+        x: 380
+        y: 282
+      positionAbsolute:
+        x: 380
+        y: 282
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    viewport:
+      x: 138.7935899604705
+      y: 83.4295487242673
+      zoom: 0.6597539553864471
+  rag_pipeline_variables: []
